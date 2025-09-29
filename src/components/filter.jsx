@@ -1,61 +1,80 @@
 import { FaStar } from "react-icons/fa";
+
+const categories = ["Skin Care", "Make up", "Hair Care", "Body Care", "Nail Care"];
+const skinTypes = ["Oily", "Dry", "Combination", "Sensitive"];
+const promotions = ["Best Sellers", "New Arrival"];
+const availability = ["In Stock", "Out of Stock"];
+
 function Filter() {
+  return (
+    <section className="px-7 py-3 bg-white shadow rounded-2xl mr-3 w-auto flex flex-col gap-5">
+      <h2 className="font-bold text-2xl">Filter Options</h2>
 
-    return(
-        <section className="px-7 py-3 bg-white shadow rounded-2xl mr-3 w-auto justify-evenly flex flex-col">
-            <h2 className="font-bold text-2xl">Filter options</h2>
-            <div>
-                <h3 className="font-bold text-xl">By Categories</h3>
-                <p className="cursor-pointer hover:text-green-700">Skin Care</p>
-                <p className="cursor-pointer hover:text-green-700">Make up</p>
-                <p className="cursor-pointer hover:text-green-700">Hair Care</p>
-                <p className="cursor-pointer hover:text-green-700">Body Care</p>
-                <p className="cursor-pointer hover:text-green-700">Nail Care</p>
-            </div>
-            <div>
-                <h3 className="font-bold text-xl">By skin Type</h3>
-                <p className="cursor-pointer hover:text-green-700">Oily</p>
-                <p className="cursor-pointer hover:text-green-700">Dry</p>
-                <p className="cursor-pointer hover:text-green-700">Combination</p>
-                <p className="cursor-pointer hover:text-green-700">Sensitive</p>
-                
-            </div>
-            <div>
-                <h3 className="font-bold text-xl">Price</h3>
-                <input type="range" name="" id="" className="text-green-700"/>
-            </div>
-            <div>
-                <h3 className="font-bold text-xl">Review</h3>
-                <p className="text-amber-300 flex gap-2 hover:cursor-pointer my-2"><FaStar /></p>
-                <p className="text-amber-300 flex gap-2 hover:cursor-pointer my-2"><FaStar /><FaStar /></p>
-                <p className="text-amber-300 flex gap-2 hover:cursor-pointer my-2"><FaStar /><FaStar /><FaStar /></p>
-                <p className="text-amber-300 flex gap-2 hover:cursor-pointer my-2"><FaStar /><FaStar /><FaStar /><FaStar /></p>
-                <p className="text-amber-300 flex gap-2 hover:cursor-pointer my-2"><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></p>
-            </div>
-            <div>
-                <h3 className="font-bold text-xl">By Promotions</h3>
-                <div>
-                    <input type="checkbox" name="best-seller" id="" />
-                    <p className="inline hover:text-green-700">Best Sellers</p>
-                </div>
-                <div>
-                     <input type="checkbox" name="new-arrival" id="" />
-                     <p  className="inline hover:text-green-700">New arrival</p>
-                </div>
+      {/* Categories */}
+      <FilterGroup title="By Categories" items={categories} />
 
-            </div>
-            <div>
-                <h3 className="font-bold text-xl">Availability</h3>
-                <div>
-                     <input type="checkbox" name="" id="" />
-                     <p  className="inline hover:text-green-700">In Stock</p>
-                </div>
-                <div>
-                     <input type="checkbox" name="" id="" />
-                     <p  className="inline hover:text-green-700">Out of Stock</p>
-                </div>
-            </div>
-        </section>
-    )
+      {/* Skin Type */}
+      <FilterGroup title="By Skin Type" items={skinTypes} />
+
+      {/* Price */}
+      <div>
+        <h3 className="font-bold text-xl mb-2">Price</h3>
+        <input type="range" className="accent-green-700 w-full" />
+      </div>
+
+      {/* Review */}
+      <div>
+        <h3 className="font-bold text-xl mb-2">Review</h3>
+        {[1, 2, 3, 4, 5].map((count) => (
+          <p
+            key={count}
+            className="text-amber-300 flex gap-1 hover:cursor-pointer my-1"
+          >
+            {Array.from({ length: count }).map((_, i) => (
+              <FaStar key={i} />
+            ))}
+          </p>
+        ))}
+      </div>
+
+      {/* Promotions */}
+      <CheckboxGroup title="By Promotions" options={promotions} />
+
+      {/* Availability */}
+      <CheckboxGroup title="Availability" options={availability} />
+    </section>
+  );
 }
-export default Filter
+
+/* --- Reusable Sub-Components --- */
+function FilterGroup({ title, items }) {
+  return (
+    <div>
+      <h3 className="font-bold text-xl mb-2">{title}</h3>
+      {items.map((item) => (
+        <p
+          key={item}
+          className="cursor-pointer hover:text-green-700 my-1"
+        >
+          {item}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function CheckboxGroup({ title, options }) {
+  return (
+    <div>
+      <h3 className="font-bold text-xl mb-2">{title}</h3>
+      {options.map((option) => (
+        <label key={option} className="flex items-center gap-2 my-1 cursor-pointer">
+          <input type="checkbox" className="accent-green-700" />
+          <span className="hover:text-green-700">{option}</span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
+export default Filter;

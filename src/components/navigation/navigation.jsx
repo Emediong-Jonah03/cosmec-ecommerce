@@ -8,9 +8,12 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import { FaShoppingBag } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
 
-export default function NavBar({ choice, toggleLiked, toggleSearch}) {
+export default function NavBar({ choice, toggleLiked, toggleSearch, itemsNumber}) {
   const [open, setOpen] = useState(false);
+
+ // itemsNumber > 0 && window.alert("Item added to cart")
 
   const liked = (
     <li>
@@ -32,7 +35,7 @@ export default function NavBar({ choice, toggleLiked, toggleSearch}) {
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
-          <CiMenuBurger />
+          {open ? <IoMdClose /> : <CiMenuBurger />}
         </button>
         <ul className="hidden sm:flex items-center gap-6">
           <li className="hover:text-green-600 cursor-pointer transition-colors duration-300">
@@ -60,7 +63,7 @@ export default function NavBar({ choice, toggleLiked, toggleSearch}) {
               </Link>
             </li>
             <div className="text-white text-sm bg-red-500 rounded-full -top-2.5 -right-2.5 absolute px-1.5">
-              1
+              {itemsNumber > 0 && itemsNumber }
             </div>
           </div>
           <li className="hover:text-green-600 cursor-pointer transition-colors duration-300"
@@ -75,7 +78,7 @@ export default function NavBar({ choice, toggleLiked, toggleSearch}) {
           <ul className="flex flex-col gap-3">
             <li className="hover:text-green-600 cursor-pointer transition-colors duration-300 flex">
               <IoMdHome className="w-7 h-7" />
-             <Link to="/home">Home</Link>
+             <Link to="/">Home</Link>
             </li>
            
             <li className="hover:text-green-600 cursor-pointer transition-colors duration-300 flex">
@@ -95,7 +98,7 @@ export default function NavBar({ choice, toggleLiked, toggleSearch}) {
                 <Link to="/cart"> <AiOutlineShoppingCart className="w-6 h-6" /></Link>
               </li>
               <div className="text-white text-sm bg-red-500 rounded-full -top-2.5 -left-1.5 absolute px-1.5">
-                1
+                {itemsNumber > 0 && itemsNumber }
               </div>
             </div>
             <li className="hover:text-green-600 cursor-pointer transition-colors duration-300 flex">

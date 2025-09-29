@@ -1,43 +1,19 @@
-import cream3 from "../assets/cream3.jpg";
-import cream2 from "../assets/cream2.jpg";
-import cream4 from "../assets/cream4.jpg";
 import { TbShoppingCartOff } from "react-icons/tb";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
-function Cart() {
-  const [cart, setCart] = useState([
-    { id: 1, img: cream3, name: "Cream 3", price: 10, qty: 1 },
-    { id: 2, img: cream2, name: "Cream 2", price: 12, qty: 1 },
-    { id: 3, img: cream4, name: "Cream 4", price: 8, qty: 1 },
-  ]);
-
-  function reduceQty(id) {
-    setCart(
-      cart.map((item) =>
-        item.id === id && item.qty > 1 ? { ...item, qty: item.qty - 1 } : item
-      )
-    );
-  }
-
-  function increaseQty(id) {
-    setCart(
-      cart.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item
-      )
-    );
-  }
-
-  function removeItem(id) {
-    setCart(cart.filter((item) => item.id !== id));
-  }
-
-  const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
-  const subTotal = cart.reduce((sum, item) => sum + item.qty * item.price, 0);
-  const shipping = subTotal > 30 ? 0 : 5;
-  const taxes = parseFloat((subTotal * 0.05).toFixed(2));
-  const discount = subTotal > 300 ? (subTotal * 0.03).toFixed(2) : 0;
-  const total = subTotal + shipping + taxes - discount;
-
+function Cart({
+  cart,
+  increaseQty,
+  decreaseQty,
+  removeItem,
+  itemsNumber,
+  shipping,
+  taxes,
+  subTotal,
+  total,
+  discount,
+  clearCart,
+}) {
   return (
     <main className="bg-gray-100 min-h-screen sm:pt-5 pt-23  px-4 flex flex-col lg:flex-row gap-8">
       {/* Products Section */}
@@ -47,7 +23,7 @@ function Cart() {
 
           <p className="text-lg font-medium">Your cart is empty</p>
           <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-            <a href="index.html">Start Shopping</a>
+            <Link to="/">Start Shopping</Link>
           </button>
         </div>
       ) : (
@@ -59,7 +35,7 @@ function Cart() {
           <div className="space-y-4">
             {cart.map((item) => (
               <div
-                key={item.id}
+                key={cart.indexOf(item)}
                 className="bg-gray-50 rounded-lg shadow-sm flex items-center justify-between px-3 py-5 sm:py-4 flex-col sm:flex-row"
               >
                 <div className="flex items-center gap-8">
@@ -71,10 +47,12 @@ function Cart() {
                   </button>
                   <img
                     src={item.img}
-                    alt={item.name}
+                    alt={item.productName}
                     className="w-20 h-20 rounded-lg object-cover"
                   />
-                  <p className="font-medium text-gray-800">{item.name}</p>
+                  <p className="font-medium text-gray-800">
+                    {item.productName}
+                  </p>
                 </div>
 
                 {/* Right Side: Price + Qty + Subtotal */}
@@ -88,12 +66,12 @@ function Cart() {
                     <p className="font-semibold">Quantity</p>
                     <div>
                       <button
-                        onClick={() => reduceQty(item.id)}
+                        onClick={() => decreaseQty(item.id)}
                         className="px-3 py-1 bg-red-400 rounded-lg hover:text-white transition-colors duration-300 font-mono mr-2.5"
                       >
                         -
                       </button>
-                      <span className="w-6 text-center">{item.qty}</span>
+                      <span className="w-6 text-center">{item.quantity}</span>
                       <button
                         onClick={() => increaseQty(item.id)}
                         className="px-3 py-1 rounded-lg hover:text-white transition-colors duration-300 bg-green-600 font-mono ml-2.5"
@@ -106,12 +84,20 @@ function Cart() {
                   <div>
                     <p className="font-semibold">Amount</p>
                     <p className="font-mono text-gray-800">
-                      ${item.price * item.qty}
+                      ${item.price * item.quantity}
                     </p>
                   </div>
                 </div>
               </div>
             ))}
+            <div className="flex justify-center align-center mt-2">
+              <button
+                onClick={clearCart}
+                className="bg-red-500 text-bold px-2 rounded text-white py-2"
+              >
+                Clear Cart
+              </button>
+            </div>
           </div>
         </section>
       )}
@@ -124,7 +110,7 @@ function Cart() {
         <div className="space-y-4">
           <div className="flex justify-between border-b pb-2">
             <p>Items</p>
-            <p>{itemsCount}</p>
+            <p>{itemsNumber}</p>
           </div>
           <div className="flex justify-between border-b pb-2">
             <p>Subtotal</p>

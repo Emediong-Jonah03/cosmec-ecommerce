@@ -1,55 +1,67 @@
-import Header from "../components/header";
+import { useState } from "react";
 import Hero from "../components/hero";
-import productData from "../database/productData";
-import Product from "../components/products"
 import Content from "../components/content";
 import Filter from "../components/filter";
+import Product from "../components/products";
+import productData from "../database/productData";
 
-import { useState, useMemo } from "react";
+export default function Home({ search, addToCart }) {
+  const [filteredProducts, setFilteredProducts] = useState(productData);
 
-export default function Home({search}) {
-
-  const [productFilter, setProductFilter] = useState(productData)
-
-  function productSearch(searchTerm) {
-
-    const lower = searchTerm.target.value.toLowerCase();
-    const filterdProducts = productData.filter((products) =>
-        products.productName.toLowerCase().includes(lower) ||
-        products.category.includes(lower) 
+  /** 🔍 Filter products by name or category */
+  function handleSearch(event) {
+    const term = event.target.value.toLowerCase();
+    const results = productData.filter(
+      (p) =>
+        p.productName.toLowerCase().includes(term) ||
+        p.category.toLowerCase().includes(term)
     );
-    setProductFilter(filterdProducts)
+    setFilteredProducts(results);
   }
-
-  const productsElement = productData.map((product) => {
-    return <Product key={product.id} {...product} />;
-  });
-
 
   return (
     <>
+      {/* ✅ Hero + Search Bar */}
       <div className="relative">
-        <Hero page={"Shop"} />
-        <div className=" absolute top-15 left-128  z-10">
-          {search &&(
+        <Hero page="Shop" />
+        {search && (
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-10 w-11/12 sm:w-3/4 md:w-1/2">
             <input
               type="search"
-              className="px-3 py-2 rounded text-black border-solid border-2 bg-white w-full"
               placeholder="Search for products"
-              onChange={productSearch}
+              onChange={handleSearch}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-black shadow-sm 
+                         focus:outline-none focus:ring-2 focus:ring-green-600"
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
+
+      {/* ✅ Optional Content Section */}
       <Content />
-      <div className="flex items-stretch justify-center">
-        <Filter />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {productsElement.length > 0 ? (productsElement)
-            : (<p>No products found</p>
-          )}
+
+      {/* ✅ Filter + Products Section */}
+      <section className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row gap-5">
+          {/* Sidebar Filter */}
+          <aside className="lg:w-1/4 w-full lg:sticky lg:top-20 h-fit">
+            <Filter />
+          </aside>
+
+          {/* Product Grid */}
+          <main className="flex-1">
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                  <Product key={product.id} {...product}  addToCart={() => addToCart(product)} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 text-center mt-8">No products found</p>
+            )}
+          </main>
         </div>
-      </div>
+      </section>
     </>
   );
 }
