@@ -1,43 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import "tailwindcss";
 
-@layer base{
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
     body {
-       font-family: 'Robonto', sans-serif;
-       background-color: #f5f5f5;
+        font-family: 'Roboto', sans-serif;
+        background-color: #f5f5f5;
     }
 }
 
-
-/*flex fixed items-center justify-between sm:justify-around text-2xs py-3 shadow flex-col sm:flex-row  bg-white h-full sm:h-11 z-30 top-5 right-0 sm:inset-x-0 sm:px-4 m-0 
+@layer components {
+    .menu {
+        @apply fixed flex items-center justify-between sm:justify-around text-xs py-3 shadow flex-col sm:flex-row bg-white h-auto sm:h-11 z-30 top-0 right-0 left-0 sm:px-4 m-0;
+    }
+}
 
 @layer utilities {
-
-    .menu{
-    position: fixed;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 1.2rem;
-    line-height: 1rem;
-    background: #fff;
-    padding: 1rem 1rem;
-    z-index: 30;
-    margin: 0;
-    height: 2.75rem;
-  }
-
     @media (min-width: 785px) {
-    .menu{
-      height: 100%;
-      width: 100%;
-      flex-direction: column;
-      top: 1.25rem;
-      right: 0;
+        .menu.on {
+            @apply -right-80;
+        }
     }
-    .menu.on{
-      right: -20rem;
-    }
-  }
 }
-  */
