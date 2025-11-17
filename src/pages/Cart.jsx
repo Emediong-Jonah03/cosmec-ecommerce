@@ -36,12 +36,12 @@ function Cart({
             {cart.map((item) => (
               <div
                 key={cart.indexOf(item)}
-                className="bg-gray-50 rounded-lg shadow-sm flex items-center justify-between px-3 py-5 sm:py-4 flex-col sm:flex-row"
+                className="bg-gradient-to-r from-slate-50 to-green-200  rounded-lg shadow-sm flex items-center justify-between px-3 py-5 sm:py-4 flex-col sm:flex-row "
               >
                 <div className="flex items-center gap-8">
                   <button
                     onClick={() => removeItem(item.id)}
-                    className="text-white px-1.5 bg-red-500 hover:opacity-85 cursor-pointer"
+                    className="text-white px-1.5 text-sm py-1 bg-red-500 hover:opacity-85 cursor-pointer rounded-md"
                   >
                     remove
                   </button>
@@ -93,7 +93,7 @@ function Cart({
             <div className="flex justify-center align-center mt-2">
               <button
                 onClick={clearCart}
-                className="bg-red-500 text-bold px-2 rounded text-white py-2"
+                className="bg-red-600 text-bold px-2 rounded-lg text-white py-2"
               >
                 Clear Cart
               </button>

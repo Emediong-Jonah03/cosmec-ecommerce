@@ -5,7 +5,7 @@ import Header from "../header";
 import NavBar from "../navigation/navigation";
 import Footer from "../footer";
 
-export default function Layout({toggleSearch, itemsNumber}) {
+export default function Layout({itemsNumber}) {
 
   const [choice, setChoice] = useState(() => {
     const savedChoice = localStorage.getItem("choice");
@@ -26,7 +26,6 @@ export default function Layout({toggleSearch, itemsNumber}) {
       <NavBar
         choice={choice}
         toggleLiked={toggleLiked}
-        toggleSearch={toggleSearch}
         itemsNumber={itemsNumber}
       />
       <Outlet />

@@ -10,7 +10,7 @@ import { FaShoppingBag } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 
-export default function NavBar({ choice, toggleLiked, toggleSearch, itemsNumber}) {
+export default function NavBar({ choice, toggleLiked, itemsNumber}) {
   const [open, setOpen] = useState(false);
 
  // itemsNumber > 0 && window.alert("Item added to cart")
@@ -27,7 +27,7 @@ export default function NavBar({ choice, toggleLiked, toggleSearch, itemsNumber}
   );
 
   return (
-    <nav className="fixed top-5 left-0 w-full bg-white shadow z-30 mx-auto ">
+    <nav className="fixed top-5 left-0 w-full bg-zinc-50 shadow-sm shadow-green-100  z-30 mx-auto ">
       <div className="container flex items-center justify-between px-4 py-3 sm:py-3 sm:px-8  mx-auto ">
         <div className="font-bold text-lg">Cosmec</div>
         <button
@@ -48,13 +48,6 @@ export default function NavBar({ choice, toggleLiked, toggleSearch, itemsNumber}
         <ul className="hidden sm:flex items-center gap-6">
           <button onClick={toggleLiked} title="Like button">{choice ? liked : Notliked}</button>
 
-          <li
-            className="hover:text-green-500 cursor-pointer transition-colors duration-300"
-            onClick={toggleSearch}
-            title="Search bar"
-          >
-            <FaSearch className="w-5 h-5" />
-          </li>
           <div className="relative">
             <li className="hover:text-green-500 cursor-pointer transition-colors duration-300"
                   title="Cart">

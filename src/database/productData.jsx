@@ -12,22 +12,22 @@ import cream9 from '../assets/cream9.jpg';
 export default [
   {
     id: 1,
-    img: cream1,  // Use the imported image directly
+    img: cream1,  
     productName: "vatalina",
     oldPrice: 50.0,
     price: 35.00,
     rating: 4.5,
-    category: "lotion",
+    category: "skin care",
     discount: 50
   },
   {
     id: 2,
-    img: cream2,  // Use the imported image directly
+    img: cream2,  
     productName: "oiliba",
     oldPrice: 60.00,
     price: 50.00,
     rating:5,
-    category: "oil",
+    category: "nail care",
     discount: 20
   },
   {
@@ -47,7 +47,7 @@ export default [
     oldPrice: 40.00,
     price: 35.00,
     rating: 4,
-    category: "lotion",
+    category: "skin care",
     discount: 30
   },
   {
@@ -67,7 +67,7 @@ export default [
     oldPrice: 52.0,
     price: 35.0,
     rating: 4.5,
-    category: "lotion",
+    category: "skin care",
     discount: 14
   },
   {
@@ -77,7 +77,7 @@ export default [
     oldPrice: 40.00,
     price: 35.0,
     rating: 3.5,
-    category: "lotion",
+    category: "skin care",
     discount: 20
   },
   {
@@ -87,7 +87,7 @@ export default [
     oldPrice: 50.0,
     price: 35.0,
     rating: 4.5,
-    category: "oil",
+    category: "nail care",
     discount: 24
   },
   {
@@ -97,7 +97,7 @@ export default [
     oldPrice: 50.00,
     price: 25.00,
     rating: 4.5,
-    category: "lotoni",
+    category: "loton",
     discount: 12
   },
 ];

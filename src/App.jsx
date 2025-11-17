@@ -12,11 +12,7 @@ import Home from "./pages/home";
 import Cart from "./pages/Cart";
 
 function App() {
-  const [search, setSearch] = useState(false);
-
-  function toggleSearch() {
-    setSearch((prev) => !prev);
-  }
+ 
 
   const productsElement = productData.map((product) => (
     <Product
@@ -95,14 +91,13 @@ function App() {
         {/* ✅ Layout Parent Route */}
         <Route
           element={
-            <Layout toggleSearch={toggleSearch} itemsNumber={itemsNumber} />
+            <Layout itemsNumber={itemsNumber} />
           }
         >
           <Route
             index
             element={
               <Home
-                search={search}
                 productsElement={productsElement}
                 addToCart={addToCart}
               />
