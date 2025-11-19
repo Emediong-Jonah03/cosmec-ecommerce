@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import { FaStar } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa";
 import { BiPurchaseTagAlt } from "react-icons/bi";
@@ -17,7 +15,7 @@ function Product({
   return (
     <div className=" bg-gradient-to-b from-green-400 to-zinc-50 px-5 py-4 shadow-lg rounded-lg hover:-translate-y-4 transition-all hover:bg-zinc-100">
       <div className="relative w-auto container h-60 max-h-auto sm:h-72">
-        <img src={img} alt="" className="w-full sm:w-65 h-full rounded-3xl" />
+        <img src={img} alt="" className="w-full sm:w-70 h-full rounded-3xl" />
         <div className="absolute top-5 left-5 bg-green-700 px-2 rounded-xl text-white sm:text-sm text-xl">
           {discount}% Off
         </div>
