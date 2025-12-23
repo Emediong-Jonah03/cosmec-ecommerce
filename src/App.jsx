@@ -8,7 +8,7 @@ const Login = lazy(() => import("./pages/auth/login"));
 const SignUp = lazy(() => import("./pages/auth/signup"));
 const About = lazy(() => import("./pages/about"));
 const Home = lazy(() => import("./pages/home"));
-const Cart = lazy(() => import("./pages/cart"));
+const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 
 
