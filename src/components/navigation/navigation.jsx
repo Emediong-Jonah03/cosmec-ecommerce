@@ -1,120 +1,136 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { CiMenuBurger } from "react-icons/ci";
-import { FaSearch } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
+import { IoMdClose, IoMdHome } from "react-icons/io";
+import {  FaHeart, FaUser } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { FaUser } from "react-icons/fa";
-import { FaShoppingBag } from "react-icons/fa";
-import { IoMdHome } from "react-icons/io";
-import { IoMdClose } from "react-icons/io";
 
 export default function NavBar({ choice, toggleLiked, itemsNumber }) {
   const [open, setOpen] = useState(false);
 
-  // itemsNumber > 0 && window.alert("Item added to cart")
-
-  const liked = (
-    <li>
-      <FaHeart className="w-5 h-5 text-red-400 cursor-pointer" />
-    </li>
-  );
-  const Notliked = (
-    <li>
-      <FaHeart className="w-5 h-5 cursor-pointer" />
-    </li>
+  const likedIcon = (
+    <FaHeart
+      className={`w-5 h-5 cursor-pointer transition-colors ${
+        choice ? "text-red-400" : "text-gray-500 hover:text-red-400"
+      }`}
+    />
   );
 
   return (
-    <nav className="fixed top-5 left-0 w-full bg-zinc-50 shadow-sm shadow-green-100  z-30 mx-auto ">
-      <div className="container flex items-center justify-between px-4 py-3 sm:py-3 sm:px-8  mx-auto ">
-        <div className="font-bold text-lg">Cosmec</div>
-        <button
-          className="sm:hidden text-2xl"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          {open ? (
-            <IoMdClose />
-          ) : (
-            <div className="relative">
-              
-              <CiMenuBurger />
-             {itemsNumber > 0 &&  <div className="absolute -top-2 -right-3 bg-red-400 w-5 rounded-full h-5 px-2"></div>}
-            </div>
-          )}
-        </button>
+    <nav className="fixed top-5 left-0 w-full bg-zinc-50/90 backdrop-blur-sm shadow-md z-50">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
+        {/* Logo */}
+        <Link to="/" className="font-bold text-xl text-green-700">
+          Cosmec
+        </Link>
+
+        {/* Desktop Menu */}
         <ul className="hidden sm:flex items-center gap-6">
-          <li className="hover:text-green-600 cursor-pointer transition-colors duration-300">
+          <li className="hover:text-green-600 transition">
             <Link to="/">Home</Link>
           </li>
-          <li className="hover:text-green-600 cursor-pointer transition-colors duration-300">
+          <li className="hover:text-green-600 transition">
             <Link to="/about">About Us</Link>
           </li>
         </ul>
-        <ul className="hidden sm:flex items-center gap-6">
-          <button onClick={toggleLiked} title="Like button">
-            {choice ? liked : Notliked}
+
+        {/* Desktop Icons */}
+        <div className="hidden sm:flex items-center gap-4">
+          <button onClick={toggleLiked} aria-label="Like">
+            {likedIcon}
           </button>
 
           <div className="relative">
-            <li
-              className="hover:text-green-500 cursor-pointer transition-colors duration-300"
-              title="Cart"
-            >
-              <Link to="/cart">
-                <AiOutlineShoppingCart className="w-5 h-5" />
-              </Link>
-            </li>
-            <div className="text-white text-sm bg-red-500 rounded-full -top-2.5 -right-2.5 absolute px-1.5">
-              {itemsNumber > 0 && itemsNumber}
-            </div>
-          </div>
-          <li
-            className="hover:text-green-600 cursor-pointer transition-colors duration-300"
-            title="User Account"
-          >
-            <Link to="/auth">
-              <FaUser className="w-5 h-5" />
+            <Link to="/cart">
+              <AiOutlineShoppingCart className="w-6 h-6 text-gray-700 hover:text-green-600 transition" />
             </Link>
-          </li>
-        </ul>
-      </div>
-      {/* Mobile menu */}
-      {open && (
-        <div className="sm:hidden px-4 pb-4">
-          <ul className="flex flex-col gap-3">
-            <li className="hover:text-green-600 cursor-pointer transition-colors duration-300 flex">
-              <IoMdHome className="w-7 h-7" />
-              <Link to="/">Home</Link>
-            </li>
+            {itemsNumber > 0 && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
+              >
+                {itemsNumber}
+              </motion.div>
+            )}
+          </div>
 
-            <li className="hover:text-green-600 cursor-pointer transition-colors duration-300 flex">
-              <Link to="/about">About Us</Link>
-            </li>
-            <button onClick={toggleLiked}>{choice ? liked : Notliked}</button>
-
-
-            <div className="relative">
-              <li className="hover:text-green-500 cursor-pointer transition-colors duration-300">
-                <Link to="/cart">
-                  {" "}
-                  <AiOutlineShoppingCart className="w-6 h-6" />
-                </Link>
-              </li>
-              <div className="text-white text-sm bg-red-500 rounded-full -top-2.5 -left-1.5 absolute px-1.5">
-                {itemsNumber > 0 && itemsNumber}
-              </div>
-            </div>
-            <li className="hover:text-green-600 cursor-pointer transition-colors duration-300 flex">
-              <Link to="/auth">
-                <FaUser className="w-6 h-6" />
-              </Link>
-            </li>
-          </ul>
+          <Link to="/signup">
+            <FaUser className="w-6 h-6 text-gray-700 hover:text-green-600 transition" />
+          </Link>
         </div>
-      )}
+
+        {/* Mobile Hamburger */}
+        <button
+          className="sm:hidden text-2xl text-gray-700"
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle menu"
+        >
+          {open ? <IoMdClose /> : <CiMenuBurger />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="sm:hidden bg-zinc-50 px-6 pb-4 flex flex-col gap-4 shadow-md"
+          >
+            <Link
+              to="/"
+              className="flex items-center gap-2 hover:text-green-600 transition"
+              onClick={() => setOpen(false)}
+            >
+              <IoMdHome /> Home
+            </Link>
+            <Link
+              to="/about"
+              className="hover:text-green-600 transition"
+              onClick={() => setOpen(false)}
+            >
+              About Us
+            </Link>
+            <button
+              onClick={toggleLiked}
+              className="flex items-center gap-2 text-gray-700 hover:text-red-400 transition"
+            >
+              {likedIcon} Like
+            </button>
+            <Link
+              to="/cart"
+              className="relative text-gray-700 hover:text-green-600 transition flex items-center gap-2"
+              onClick={() => setOpen(false)}
+            >
+              <AiOutlineShoppingCart className="w-6 h-6" />
+              {itemsNumber > 0 && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
+                >
+                  {itemsNumber}
+                </motion.div>
+              )}
+              Cart
+            </Link>
+            <Link
+              to="/signup"
+              className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition"
+              onClick={() => setOpen(false)}
+            >
+              <FaUser /> Account
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
