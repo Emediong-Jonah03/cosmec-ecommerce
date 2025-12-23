@@ -1,7 +1,8 @@
 import { TbShoppingCartOff } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
-function Cart({
+export default function Cart({
   cart,
   increaseQty,
   decreaseQty,
@@ -15,131 +16,130 @@ function Cart({
   clearCart,
 }) {
   return (
-    <main className="bg-gray-100 min-h-screen sm:pt-5 pt-23  px-4 flex flex-col lg:flex-row gap-8">
+    <main className="bg-zinc-50 min-h-screen px-4 sm:px-8 lg:px-16 pt-10 flex flex-col lg:flex-row gap-8">
       {/* Products Section */}
-      {cart.length == 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-500 w-full">
-          <TbShoppingCartOff className="w-full" />
-
-          <p className="text-lg font-medium">Your cart is empty</p>
-          <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-            <Link to="/">Start Shopping</Link>
-          </button>
+      {cart.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 w-full text-gray-400">
+          <TbShoppingCartOff className="text-6xl mb-4 opacity-40" />
+          <p className="text-xl font-semibold mb-4">Your cart is empty</p>
+          <Link
+            to="/"
+            className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition"
+          >
+            Start Shopping
+          </Link>
         </div>
       ) : (
-        <section className="bg-white rounded-xl shadow-md flex-1 p-6">
-          <h2 className="text-xl font-semibold mb-6 border-b pb-3">
-            Shopping Cart
-          </h2>
+        <section className="flex-1 flex flex-col gap-6">
+          <h2 className="text-2xl font-bold border-b pb-3">Shopping Cart</h2>
 
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <div
-                key={cart.indexOf(item)}
-                className="bg-gradient-to-r from-slate-50 to-green-200  rounded-lg shadow-sm flex items-center justify-between px-3 py-5 sm:py-4 flex-col sm:flex-row "
-              >
-                <div className="flex items-center gap-8">
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="text-white px-1.5 text-sm py-1 bg-red-500 hover:opacity-85 cursor-pointer rounded-md"
-                  >
-                    remove
-                  </button>
-                  <img
-                    src={item.img}
-                    alt={item.productName}
-                    className="w-20 h-20 rounded-lg object-cover"
-                  />
-                  <p className="font-medium text-gray-800">
-                    {item.productName}
-                  </p>
-                </div>
-
-                {/* Right Side: Price + Qty + Subtotal */}
-                <div className="flex items-center gap-8">
-                  <div className="flex-col">
-                    <p className="font-semibold">Price</p>
-                    <p className="text-gray-700 font-mono">${item.price}</p>
-                  </div>
-
-                  <div className="flex items-center flex-col gap-3 mt-2.5 sm:mt-0">
-                    <p className="font-semibold">Quantity</p>
+          <div className="flex flex-col gap-4">
+            <AnimatePresence>
+              {cart.map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  className="bg-white rounded-xl shadow-md flex flex-col sm:flex-row items-center justify-between p-4 gap-4 hover:shadow-lg transition-shadow"
+                >
+                  {/* Left: Image + Name + Remove */}
+                  <div className="flex items-center gap-4 flex-1">
+                    <img
+                      src={item.image_link}
+                      alt={item.name}
+                      className="w-20 h-20 rounded-lg object-cover"
+                    />
                     <div>
-                      <button
-                        onClick={() => decreaseQty(item.id)}
-                        className="px-3 py-1 bg-red-400 rounded-lg hover:text-white transition-colors duration-300 font-mono mr-2.5"
-                      >
-                        -
-                      </button>
-                      <span className="w-6 text-center">{item.quantity}</span>
-                      <button
-                        onClick={() => increaseQty(item.id)}
-                        className="px-3 py-1 rounded-lg hover:text-white transition-colors duration-300 bg-green-600 font-mono ml-2.5"
-                      >
-                        +
-                      </button>
+                      <p className="font-semibold text-gray-800">
+                        {item.name}
+                      </p>
+                      <p className="text-sm text-gray-500">{item.category}</p>
                     </div>
                   </div>
 
-                  <div>
-                    <p className="font-semibold">Amount</p>
-                    <p className="font-mono text-gray-800">
+                  {/* Middle: Quantity */}
+                  <div className="flex items-center gap-2 mt-3 sm:mt-0">
+                    <button
+                      onClick={() => decreaseQty(item.id)}
+                      className="px-3 py-1 bg-red-200 text-red-700 rounded-full hover:bg-red-400 hover:text-white transition"
+                    >
+                      -
+                    </button>
+                    <span className="px-4 py-1 bg-gray-100 rounded-full">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => increaseQty(item.id)}
+                      className="px-3 py-1 bg-green-200 text-green-700 rounded-full hover:bg-green-500 hover:text-white transition"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Right: Price + Remove */}
+                  <div className="flex flex-col items-end gap-2 mt-3 sm:mt-0">
+                    <p className="font-semibold text-gray-800">
                       ${item.price * item.quantity}
                     </p>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="text-red-500 hover:text-red-700 text-sm"
+                    >
+                      Remove
+                    </button>
                   </div>
-                </div>
-              </div>
-            ))}
-            <div className="flex justify-center align-center mt-2">
-              <button
-                onClick={clearCart}
-                className="bg-red-600 text-bold px-2 rounded-lg text-white py-2"
-              >
-                Clear Cart
-              </button>
-            </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
+
+          <button
+            onClick={clearCart}
+            className="self-start mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
+          >
+            Clear Cart
+          </button>
         </section>
       )}
+
       {/* Summary Section */}
-      <section className="bg-white rounded-xl shadow-md w-full lg:w-96 p-6">
-        <h2 className="text-xl font-semibold mb-6 border-b pb-3">
-          Order Summary
-        </h2>
+      {cart.length > 0 && (
+        <section className="bg-white rounded-xl shadow-md w-full lg:w-96 p-6 flex flex-col gap-4">
+          <h2 className="text-2xl font-bold border-b pb-3">Order Summary</h2>
 
-        <div className="space-y-4">
-          <div className="flex justify-between border-b pb-2">
-            <p>Items</p>
-            <p>{itemsNumber}</p>
+          <div className="space-y-2">
+            <div className="flex justify-between text-gray-600">
+              <span>Items</span>
+              <span>{itemsNumber}</span>
+            </div>
+            <div className="flex justify-between text-gray-600">
+              <span>Subtotal</span>
+              <span>${subTotal}</span>
+            </div>
+            <div className="flex justify-between text-gray-600">
+              <span>Shipping</span>
+              <span>${shipping}</span>
+            </div>
+            <div className="flex justify-between text-gray-600">
+              <span>Taxes (5%)</span>
+              <span>${taxes}</span>
+            </div>
+            <div className="flex justify-between text-gray-600">
+              <span>Discount</span>
+              <span>${discount}</span>
+            </div>
+            <div className="flex justify-between font-bold text-lg">
+              <span>Total</span>
+              <span>${total}</span>
+            </div>
           </div>
-          <div className="flex justify-between border-b pb-2">
-            <p>Subtotal</p>
-            <p>${subTotal}</p>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <p>Shipping</p>
-            <p>${shipping}</p>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <p>Taxes (5%)</p>
-            <p>${taxes}</p>
-          </div>
-          <div className="flex justify-between border-b pb-2">
-            <p>Discount</p>
-            <p>${discount}</p>
-          </div>
-          <div className="flex justify-between font-bold text-lg">
-            <p>Total</p>
-            <p>${total}</p>
-          </div>
-        </div>
 
-        <button className="mt-6 bg-green-600 hover:bg-green-700 w-full py-3 text-white font-semibold rounded-lg transition">
-          Proceed to Checkout
-        </button>
-      </section>
+          <Link to="/checkout" className="mt-6 text-center bg-green-500 hover:bg-green-600 w-full py-3 text-white font-semibold rounded-lg transition">
+            Proceed to Checkout
+          </Link>
+        </section>
+      )}
     </main>
   );
 }
-
-export default Cart;

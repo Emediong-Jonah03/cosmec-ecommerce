@@ -1,149 +1,184 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-
-import Product from "./components/products";
-import productData from "./database/productData";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Layout from "./components/Layout/layout";
+import IntroLoader from "./components/introLoader";
 
-import Login from "./pages/auth/login";
-import SignUp from "./pages/auth/signup";
+// Lazy-loaded pages
+const Login = lazy(() => import("./pages/auth/login"));
+const SignUp = lazy(() => import("./pages/auth/signup"));
+const About = lazy(() => import("./pages/about"));
+const Home = lazy(() => import("./pages/home"));
+const Cart = lazy(() => import("./pages/cart"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
-import Home from "./pages/home";
-import Cart from "./pages/Cart";
+
+const PRODUCTS_API =
+  "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
 
 function App() {
- 
+  // Products fetched from API
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
-  const productsElement = productData.map((product) => (
-    <Product
-      key={product.id}
-      {...product}
-      addToCart={() => addToCart(product)}
-    />
-  ));
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch(PRODUCTS_API);
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingProducts(false);
+      }
+    }
+    fetchProducts();
+  }, []);
 
+  // Cart state
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  function addToCart(productToAdd) {
-    setCart((prevItem) => {
-      const existingItem = prevItem.find((item) => item.id === productToAdd.id);
-
-      if (existingItem) {
-        return prevItem.map((item) =>
-          item.id === productToAdd.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        return [...prevItem, { ...productToAdd, quantity: 1 }];
-      }
-    });
-  }
-
-  function increaseQty(id) {
-    setCart((cart) =>
-      cart.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  }
-
-  function decreaseQty(id) {
-    setCart((cart) =>
-      cart.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  }
-
-  function removeItem(id) {
-    setCart((cart) => cart.filter((item) => item.id !== id));
-  }
-
+  // Update localStorage whenever cart changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  function clearCart() {
-    setCart([]);
-    localStorage.removeItem("cart");
-  }
+  // Cart helper functions
+  const addToCart = (productToAdd) => {
+    setCart((prev) => {
+      const existing = prev.find((p) => p.id === productToAdd.id);
+      if (existing) {
+        return prev.map((p) =>
+          p.id === productToAdd.id ? { ...p, quantity: p.quantity + 1 } : p
+        );
+      }
+      return [...prev, { ...productToAdd, quantity: 1 }];
+    });
+  };
 
+  const increaseQty = (id) => {
+    updateCartItem(id, (item) => ({ ...item, quantity: item.quantity + 1 }));
+  };
+
+  const decreaseQty = (id) => {
+    updateCartItem(id, (item) => ({
+      ...item,
+      quantity: item.quantity > 1 ? item.quantity - 1 : 1,
+    }));
+  };
+
+  const updateCartItem = (id, modifierFn) => {
+    setCart((prev) =>
+      prev.map((item) => (item.id === id ? modifierFn(item) : item))
+    );
+  };
+
+  const removeItem = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  // Cart calculations
   const itemsNumber = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subTotal = cart.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
   const shipping = subTotal > 30 ? 0 : 5;
-  const taxes = parseFloat((subTotal * 0.05).toFixed(2));
+  const taxes = parseFloat((subTotal * 0.03).toFixed(2));
   const discount =
     subTotal > 300 ? parseFloat((subTotal * 0.03).toFixed(2)) : 0;
   const total = subTotal + shipping + taxes - discount;
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* ✅ Layout Parent Route */}
-        <Route
-          element={
-            <Layout itemsNumber={itemsNumber} />
-          }
-        >
+      <Suspense
+        fallback={
+          <IntroLoader />
+        }
+      >
+        <Routes>
+          {/* Layout with nested routes */}
+          <Route element={<Layout itemsNumber={itemsNumber} />}>
+            <Route
+              index
+              element={
+                <Home
+                  products={products}
+                  loading={loadingProducts}
+                  addToCart={addToCart}
+                />
+              }
+            />
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/cart"
+              element={
+                <Cart
+                  cart={cart}
+                  addToCart={addToCart}
+                  updateCartItem={updateCartItem}
+                  removeItem={removeItem}
+                  clearCart={clearCart}
+                  increaseQty={increaseQty}
+                  decreaseQty={decreaseQty}
+                  itemsNumber={itemsNumber}
+                  subTotal={subTotal}
+                  shipping={shipping}
+                  taxes={taxes}
+                  discount={discount}
+                  total={total}
+                />
+              }
+            />
+          </Route>
           <Route
-            index
+            path="/checkout"
             element={
-              <Home
-                productsElement={productsElement}
-                addToCart={addToCart}
-              />
-            }
-          />
-          <Route
-            path="cart"
-            element={
-              <Cart
-                cart={cart}
-                decreaseQty={decreaseQty}
-                increaseQty={increaseQty}
-                removeItem={removeItem}
-                clearCart={clearCart}
-                itemsNumber={itemsNumber}
+              <Checkout
                 subTotal={subTotal}
                 shipping={shipping}
-                taxes={taxes}
-                discount={discount}
                 total={total}
+                taxes={taxes}
+                itemsNumber={itemsNumber}
               />
             }
           />
-        </Route>
+          {/* Auth pages */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
 
-        {/* ✅ Standalone Auth Routes */}
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
-
-        {/* ✅ Catch-All */}
-        <Route
-          path="*"
-          element={
-            <div className="flex align-center justify-center flex-col gap-4 mt-20 px-5">
-              <h1 className=" text-3xl font-bold text-orange-500">
-                404 Page is not yet available it is still in development by the
-                developers
-              </h1>
-              <button className="bg-green-500 cursor-pointer hover:bg-green-400 rounded text-white px-3 py-2 mx-37">
-                <Link to="/">Back to Home</Link>
-              </button>
-            </div>
-          }
-        />
-      </Routes>
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <div className="flex flex-col items-center justify-center gap-6 mt-20 px-5 text-center">
+                <h1 className="text-3xl font-bold text-black/80">
+                  404 — Page Not Found
+                </h1>
+                <p className="text-black/50 max-w-md">
+                  The page you are looking for does not exist. It might still be
+                  under development.
+                </p>
+                <Link
+                  to="/"
+                  className="bg-green-400 hover:bg-green-300 transition text-white rounded-full px-6 py-3"
+                >
+                  Back to Home
+                </Link>
+              </div>
+            }
+          />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
+
 export default App;

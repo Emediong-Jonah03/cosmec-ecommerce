@@ -1,67 +1,89 @@
 import { FaStar } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa";
 import { BiPurchaseTagAlt } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 function Product({
   discount,
   rating,
-  productName,
-  oldPrice,
+  name,
   price,
-  category,
-  img,
+  product_type,
+  image_link,
   addToCart,
 }) {
   return (
-    <div className=" bg-gradient-to-b from-green-400 to-zinc-50 px-5 py-4 shadow-lg rounded-lg hover:-translate-y-4 transition-all hover:bg-zinc-100">
-      <div className="relative w-auto container h-60 max-h-auto sm:h-72">
-        <img src={img} alt="" className="w-full sm:w-70 h-full rounded-3xl" />
-        <div className="absolute top-5 left-5 bg-green-700 px-2 rounded-xl text-white sm:text-sm text-xl">
-          {discount}% Off
-        </div>
-      </div>
-      <div className="py-3 w-auto leading-loose px-4">
-        <div className="flex justify-between items-center mx-7">
-          <p>
-            {category
-              ? category.charAt(0).toUpperCase() + category.slice(1)
-              : ""}
-          </p>
-          <p className="text-amber-300 flex items-center gap-1.5">
-            {" "}
-            <FaStar />
-            <span className="text-black">{rating}</span>
-          </p>
-        </div>
-        <div className="font-semibold flex items-center gap-2 justify-between">
-          <p className="text-[1.3rem]">
-            {productName.charAt(0).toUpperCase() + productName.slice(1)}
-          </p>
+    <motion.div
+      className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Image */}
+      <motion.div
+        className="relative h-64 overflow-hidden rounded-t-2xl"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.5 }}
+      >
+        <img
+          src={image_link}
+          alt={name}
+          className="w-full h-full object-cover"
+        />
 
-          <div className="flex items-center gap-2.5">
-            <p className="text-orange-400 text-base font-semibold">${price}</p>
-            <p className="text-stone-600  text-base font-semibold">
-              $<del>{oldPrice}</del>
-            </p>
+        {discount && (
+          <div className="absolute top-4 left-4 bg-green-400/90 text-black text-sm font-semibold px-3 py-1 rounded-full">
+            {discount}% off
+          </div>
+        )}
+      </motion.div>
+
+      {/* Content */}
+      <div className="p-5 space-y-4">
+        {/* Category & Rating */}
+        <div className="flex items-center justify-between text-sm">
+          <p className="text-black/50 uppercase tracking-wide">{product_type}</p>
+          <div className="flex items-center gap-1 text-amber-400">
+            <FaStar />
+            <span className="text-black text-sm font-medium">{rating}</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <button className="bg-green-700 px-3 text-white rounded-full hover:opacity-85 flex items-center gap-2">
-            <BiPurchaseTagAlt />
-            Purchase
-          </button>
+        {/* Product Name */}
+        <h3 className="text-lg font-semibold leading-snug">{name}</h3>
 
-          <button
-            className="border-green-700 border-2 px-3 rounded-lg hover:bg-green-500 hover:text-white hover:opacity-85 transition-colors duration-300 flex items-center gap-2 justify-between "
+        {/* Price */}
+        <div className="flex items-center gap-3">
+          <span className="text-xl font-bold text-black">${price}</span>
+        
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3 pt-2">
+          {/* Primary */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="flex-1 bg-green-400 hover:bg-green-300 transition rounded-full py-2 font-semibold flex items-center justify-center gap-2"
+          >
+            <BiPurchaseTagAlt />
+            Buy now
+          </motion.button>
+
+          {/* Secondary */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={addToCart}
+            className="w-12 h-12 border border-black/10 rounded-full flex items-center justify-center hover:bg-zinc-50 transition"
           >
             <FaCartPlus />
-             Cart
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
+
 export default Product;

@@ -1,56 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Hero from "../components/hero";
-import Content from "../components/content";
-import Filter from "../components/filter";
+import SearchInput from "../components/searchInput";
 import Product from "../components/products";
-import productData from "../database/productData";
+import ProductSkeleton from "../components/ProductSkeleton";
 
-export default function Home({ addToCart }) {
-  const [filteredProducts, setFilteredProducts] = useState(productData);
+export default function Home({ products, loading, addToCart }) {
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
-  /** Filter products by name or category */
-  function handleSearch(event) {
+ 
+
+  const handleSearch = (event) => {
     const term = event.target.value.toLowerCase();
-    const results = productData.filter(
-      (p) =>
-        p.productName.toLowerCase().includes(term) ||
-        p.category.toLowerCase().includes(term)
+    const results = products.filter(
+      (pr) =>
+        pr.name.toLowerCase().includes(term) 
+      //||  pr.category.toLowerCase().includes(term)
     );
     setFilteredProducts(results);
-  }
+  };
 
   return (
     <>
-     
-        <Hero page="Shop" handleSearch={handleSearch} />
+      <Hero page="Shop" />
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <SearchInput handleSearch={handleSearch} />
+      </div>
 
-
-  
-      <Content filteredProducts={filteredProducts} />
-
-      {/* ✅ Filter + Products Section */}
       <section className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-slate-50">
-        <div className="flex flex-col lg:flex-row gap-5">
-
-          {/* Product Grid */}
-          <main className="flex-1">
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
+        {filteredProducts.length === 0 && !loading ? (
+          <p className="text-gray-500 text-center mt-8">No products found</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {loading
+              ? Array(6)
+                  .fill(0)
+                  .map((_, i) => <ProductSkeleton key={i} />)
+              : filteredProducts.map((product) => (
                   <Product
                     key={product.id}
                     {...product}
                     addToCart={() => addToCart(product)}
                   />
                 ))}
-              </div>
-            ) : (
-              <p className="text-gray-500 text-center mt-8">
-                No products found
-              </p>
-            )}
-          </main>
-        </div>
+          </div>
+        )}
       </section>
     </>
   );
