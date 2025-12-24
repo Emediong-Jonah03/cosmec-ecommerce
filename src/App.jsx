@@ -13,7 +13,7 @@ const Checkout = lazy(() => import("./pages/Checkout"));
 
 
 const PRODUCTS_API =
-  "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
+  "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
 
 function App() {
   // Products fetched from API
