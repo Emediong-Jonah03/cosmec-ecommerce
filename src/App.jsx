@@ -17,23 +17,24 @@ const PRODUCTS_API =
 
 function App() {
   // Products fetched from API
-  const [products, setProducts] = useState([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
+ const [products, setProducts] = useState([]);
+const [loadingProducts, setLoadingProducts] = useState(true);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await fetch(PRODUCTS_API);
-        const data = await res.json();
-        setProducts(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingProducts(false);
-      }
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(PRODUCTS_API);
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingProducts(false);
     }
-    fetchProducts();
-  }, []);
+  };
+
+  fetchProducts();
+}, []);
 
   // Cart state
   const [cart, setCart] = useState(() => {
