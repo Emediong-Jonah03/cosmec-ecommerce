@@ -18,24 +18,26 @@ const PRODUCTS_API =
 function App() {
   // Products fetched from API
  const [products, setProducts] = useState([]);
-const [loadingProducts, setLoadingProducts] = useState(true);
+const [filteredProducts, setFilteredProducts] = useState([]);
+const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   const fetchProducts = async () => {
     try {
       const res = await fetch(PRODUCTS_API);
       const data = await res.json();
+
       setProducts(data);
+      setFilteredProducts(data);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoadingProducts(false);
+      setLoading(false);
     }
   };
 
   fetchProducts();
 }, []);
-
   // Cart state
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
