@@ -112,7 +112,8 @@ useEffect(() => {
               element={
                 <Home
                   products={products}
-filteredProducts={filteredProducts}
+               filteredProducts={filteredProducts}
+         setFilteredProducts={setFilteredProducts}
                   loading={loadingProducts}
                   addToCart={addToCart}
                 />
