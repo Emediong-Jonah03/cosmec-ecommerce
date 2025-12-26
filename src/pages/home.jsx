@@ -5,12 +5,10 @@ import Product from "../components/products";
 import ProductSkeleton from "../components/ProductSkeleton";
 import React from "react"
 
-export default function Home({ products, loading, addToCart }) {
-  const [filteredProducts, setFilteredProducts] = useState(products);
-
+export default function Home({ products, loading, addToCart,filteredProducts }) {
  
 
-  const handleSearch = (event) => {
+ const handleSearch = (event) => {
     const term = event.target.value.toLowerCase();
     const results = products.filter(
       (pr) =>
