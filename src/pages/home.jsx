@@ -5,7 +5,7 @@ import Product from "../components/products";
 import ProductSkeleton from "../components/ProductSkeleton";
 import React from "react"
 
-export default function Home({ products, loading, addToCart,filteredProducts }) {
+export default function Home({ products, loading, addToCart,filteredProducts, setFilteredProducts }) {
  
 
  const handleSearch = (event) => {
