@@ -11,11 +11,9 @@ const Home = lazy(() => import("./pages/home"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 
-
+function App() {
 const PRODUCTS_API =
   "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
-
-function App() {
   // Products fetched from API
  const [products, setProducts] = useState([]);
 const [filteredProducts, setFilteredProducts] = useState([]);
